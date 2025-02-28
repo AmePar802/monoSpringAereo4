@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{fragments/header :: header}"></div>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <!-- Container principale -->
+    <div class="container py-5">
+        <h2 class="text-center mb-4">Voli Disponibili</h2>
+        
+        <!-- Card contenente la tabella dei voli -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <!-- Intestazione tabella -->
+                        <thead class="table-light">
+                            <tr>
+                                <th>Codice</th>
+                                <th>Origine</th>
+                                <th>Destinazione</th>
+                                <th>Data</th>
+                                <th>Compagnia</th>
+                                <th>Posti</th>
+                                <th>Prezzo</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <!-- Corpo tabella con iterazione su tutti i voli -->
+                        <tbody>
+                            <!-- Riga per ogni volo presente nella lista -->
+                            <tr th:each="volo : ${voli}">
+                                <td th:text="${volo.codiceVolo}">AZ123</td>
+                                <td th:text="${volo.origine}">Roma</td>
+                                <td th:text="${volo.destinazione}">Milano</td>
+                                <td th:text="${#dates.format(volo.dataPartenza, 'dd/MM/yyyy HH:mm')}">01/01/2024</td>
+                                <td th:text="${volo.compagniaAerea}">Alitalia</td>
+                                <td th:text="${volo.postiDisponibili}">150</td>
+                                <td th:text="${'€ ' + #numbers.formatDecimal(volo.prezzoBase, 1, 2)}">€ 99.90</td>
+                                <td>
+                                    <!-- Pulsante per prenotare il volo corrente -->
+                                    <a th:href="@{/prenotazioni/nuova/{id}(id=${volo.id})}" class="btn btn-sm btn-primary">
+                                        Prenota
+                                    </a>
+                                </td>
+                            </tr>
+                            <!-- Messaggio se non ci sono voli disponibili -->
+                            <tr th:if="${#lists.isEmpty(voli)}">
+                                <td colspan="8" class="text-center py-4">
+                                    <p>Non ci sono voli disponibili al momento.</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

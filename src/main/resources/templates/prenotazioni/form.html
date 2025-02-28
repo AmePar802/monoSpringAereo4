@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{fragments/header :: header}"></div>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <div class="container py-5">
+        <h2 class="text-center mb-4">Prenota il tuo volo</h2>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <!-- Riepilogo volo selezionato -->
+                        <div class="alert alert-info mb-4">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <strong>Volo:</strong> <span th:text="${volo.codiceVolo}">AZ123</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <strong>Tratta:</strong> <span th:text="${volo.origine + ' → ' + volo.destinazione}">Roma → Milano</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <strong>Data:</strong> <span th:text="${#dates.format(volo.dataPartenza, 'dd/MM/yyyy HH:mm')}">01/01/2024 12:00</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <form th:action="@{/prenotazioni/salva}" method="post" th:object="${prenotazione}">
+                            <!-- Campi nascosti -->
+                            <input type="hidden" th:field="*{id}" />
+                            <input type="hidden" th:field="*{volo.id}" />
+                            <input type="hidden" th:field="*{codiceVolo}" />
+                            <input type="hidden" id="prezzoUnitario" th:value="${volo.prezzoBase}" />
+                            
+                            <!-- Passeggeri -->
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3">
+                                    <label for="nAdulti" class="form-label">Numero adulti:</label>
+                                    <select class="form-select" id="nAdulti" th:field="*{nAdulti}" onchange="calcolaPrezzoTotale()">
+                                        <option th:each="i : ${#numbers.sequence(1, 9)}" th:value="${i}" th:text="${i}">1</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="nBambini" class="form-label">Numero bambini:</label>
+                                    <select class="form-select" id="nBambini" th:field="*{nBambini}" onchange="calcolaPrezzoTotale()">
+                                        <option th:each="i : ${#numbers.sequence(0, 9)}" th:value="${i}" th:text="${i}">0</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Prezzo -->
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Prezzo unitario:</label>
+                                    <p th:text="${'€ ' + #numbers.formatDecimal(volo.prezzoBase, 1, 2)}">€ 99.90</p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Prezzo totale:</label>
+                                    <p class="fw-bold text-primary" id="prezzoTotaleDisplay">€ 0.00</p>
+                                    <input type="hidden" th:field="*{prezzoBiglietto}" id="prezzoBiglietto" />
+                                </div>
+                            </div>
+                            
+                            <!-- Pulsanti -->
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a th:href="@{/voli}" class="btn btn-secondary me-md-2">Annulla</a>
+                                <button type="submit" class="btn btn-primary">Prenota</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    
+    <script>
+        function calcolaPrezzoTotale() {
+            const prezzoUnitario = parseFloat(document.getElementById('prezzoUnitario').value);
+            const nAdulti = parseInt(document.getElementById('nAdulti').value);
+            const nBambini = parseInt(document.getElementById('nBambini').value);
+            
+            const totalePersone = nAdulti + nBambini;
+            const prezzoTotale = prezzoUnitario * totalePersone;
+            
+            document.getElementById('prezzoTotaleDisplay').textContent = '€ ' + prezzoTotale.toFixed(2);
+            document.getElementById('prezzoBiglietto').value = prezzoTotale;
+        }
+        
+        // Calcola il prezzo iniziale al caricamento della pagina
+        window.onload = function() {
+            calcolaPrezzoTotale();
+        };
+    </script>
+</body>
+</html>

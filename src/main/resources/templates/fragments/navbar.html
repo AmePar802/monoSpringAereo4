@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+	<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Agenzia Viaggi</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item" th:classappend="${currentPage == 'home'} ? 'active' : ''">
+                    <a class="nav-link" th:href="@{/}">Home</a>
+                </li>
+                <li class="nav-item" th:classappend="${currentPage == 'voli'} ? 'active' : ''">
+                    <a class="nav-link" th:href="@{/voli}">Lista Voli</a>
+                </li>
+                <li class="nav-item" th:classappend="${currentPage == 'prenotazioni'} ? 'active' : ''">
+                    <a class="nav-link" th:href="@{/prenotazioni}">Prenotazioni</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</body>
+</html>

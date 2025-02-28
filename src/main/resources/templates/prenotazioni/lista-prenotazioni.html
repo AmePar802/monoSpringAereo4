@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{fragments/header :: header}"></div>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <!-- Contenuto principale -->
+    <div class="container py-5">
+        <h2 class="text-center mb-4">Le Mie Prenotazioni</h2>
+        
+        <!-- Card con la tabella delle prenotazioni -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Codice Volo</th>
+                                <th>Origine-Destinazione</th>
+                                <th>Data Partenza</th>
+                                <th>Passeggeri</th>
+                                <th>Prezzo Totale</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Riga per ogni prenotazione -->
+                            <tr th:each="prenotazione : ${prenotazioni}">
+                                <td th:text="${prenotazione.codiceVolo}">AZ123</td>
+                                <td th:text="${prenotazione.volo != null ? (prenotazione.volo.origine + ' → ' + prenotazione.volo.destinazione) : '-'}">Roma → Milano</td>
+                                <td th:text="${prenotazione.volo != null ? #dates.format(prenotazione.volo.dataPartenza, 'dd/MM/yyyy HH:mm') : '-'}">01/01/2024 12:00</td>
+                                <td th:text="${prenotazione.nAdulti + ' adulti, ' + prenotazione.nBambini + ' bambini'}">1 adulti, 0 bambini</td>
+                                <td th:text="${'€ ' + #numbers.formatDecimal(prenotazione.prezzoBiglietto, 1, 2)}">€ 99.90</td>
+                                <td>
+                                    <!-- Pulsante per eliminare la prenotazione -->
+                                    <a th:href="@{/prenotazioni/elimina/{id}(id=${prenotazione.id})}" 
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('Sei sicuro di voler eliminare questa prenotazione?')">
+                                        Cancella
+                                    </a>
+                                </td>
+                            </tr>
+                            
+                            <!-- Messaggio se non ci sono prenotazioni -->
+                            <tr th:if="${#lists.isEmpty(prenotazioni)}">
+                                <td colspan="6" class="text-center py-4">
+                                    <p>Non hai ancora prenotazioni</p>
+                                    <a th:href="@{/voli}" class="btn btn-primary mt-2">Cerca Voli</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

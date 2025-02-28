@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{fragments/header :: header}"></div>
+    <style>
+        .hero-section {
+            position: relative;
+            height: 600px;
+            overflow: hidden;
+        }
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .hero-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            width: 80%;
+            max-width: 800px;
+        }
+        .card {
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .destination-image {
+            height: 200px;
+            object-fit: cover;
+        }
+        .section-title {
+            position: relative;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            margin-top: 50px;
+        }
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <img src="https://i.imgur.com/VNef1Bd.jpeg" alt="Aereo in volo" class="hero-image">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="display-3 fw-bold mb-4">Scopri il Mondo Volando con Noi</h1>
+            <p class="lead mb-4">Offerte esclusive e destinazioni mozzafiato ti aspettano.</p>
+            <a th:href="@{/voli}" class="btn btn-primary btn-lg px-4">Trova il tuo prossimo volo</a>
+        </div>
+    </div>
+
+    <!-- Ultimi Voli -->
+    <div class="container py-5">
+        <h2 class="text-center section-title">Ultimi Voli Disponibili</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4" th:each="volo : ${ultimiVoli}">
+                <div class="card h-100">
+                    <!-- Fallback a un'immagine placeholder se destination.jpg non esiste -->
+                    <img class="card-img-top destination-image" 
+                         th:src="@{/images/destination.jpg}" 
+                         src="https://via.placeholder.com/400x200?text=Destinazione"
+                         alt="Destinazione">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold" th:text="${volo.origine + ' → ' + volo.destinazione}">Roma → Milano</h5>
+                        <p class="card-text text-muted" th:text="${'Codice Volo: ' + volo.codiceVolo}">AZ123</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Data partenza:</span>
+                            <span th:text="${#dates.format(volo.dataPartenza, 'dd/MM/yyyy HH:mm')}">01/01/2024 12:00</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Posti disponibili:</span>
+                            <span th:text="${volo.postiDisponibili}">150</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Prezzo:</span>
+                            <span class="fw-bold text-primary" th:text="${'€ ' + #numbers.formatDecimal(volo.prezzoBase, 1, 2)}">€ 99.90</span>
+                        </li>
+                    </ul>
+                    <div class="card-body text-center pt-2 pb-3">
+                        <a th:href="@{/voli/{id}(id=${volo.id})}" class="btn btn-primary">Prenota ora</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Messaggio quando non ci sono voli -->
+            <div class="col-12 text-center py-5" th:if="${#lists.isEmpty(ultimiVoli)}">
+                <p class="text-muted">Nessun volo disponibile al momento.</p>
+                <a th:href="@{/voli}" class="btn btn-outline-primary mt-3">Controlla tutti i voli</a>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <!-- Script Bootstrap alla fine per migliorare prestazioni -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
