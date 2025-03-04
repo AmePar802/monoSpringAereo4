@@ -13,7 +13,7 @@ Per adesso l'applicazione permette di visualizzare voli disponibili,
 prenotarli e cancellarli. Per utilizzarlo basta configurare le credenziali
 nel file application.properties
 
-L'applicazione sarà disponibile all'indirizzo localhost:8080
+L'applicazione sarà disponibile all'indirizzo localhost:8096
 
 Il progetto usa il pattern MVC, gestisce la persistenza dei dati tramite
 Spring Data JPA e l'interfaccia utente è realizzata con Thymeleaf (e bootstrap)
