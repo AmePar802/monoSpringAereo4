@@ -17,3 +17,5 @@ L'applicazione sarà disponibile all'indirizzo localhost:8096
 
 Il progetto usa il pattern MVC, gestisce la persistenza dei dati tramite
 Spring Data JPA e l'interfaccia utente è realizzata con Thymeleaf (e bootstrap)
+
+![prenotazione-voli](https://github.com/user-attachments/assets/52c3985f-2df8-4c11-b3d2-6e8d015786cc)
