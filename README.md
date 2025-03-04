@@ -1,4 +1,4 @@
-Questa è è un'applicazione web sviluppata con Spring Boot che offre un sistema di prenotazione e cancellazione voli.
+Questa è un'applicazione web sviluppata con Spring Boot che offre un sistema di prenotazione e cancellazione voli.
 L'applicazione permette agli utenti di visualizzare i voli disponibili, effettuare prenotazioni e gestire le proprie
 prenotazioni esistenti.
 
